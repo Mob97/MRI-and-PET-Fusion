@@ -1,0 +1,41 @@
+clear all
+
+Irmi = im2double(imread('070_mri.bmp'));
+MRI = rgb2gray(Irmi);
+ 
+RGB = im2double(imread('070_pet.bmp'));
+
+R = RGB(:,:,1);
+G = RGB(:,:,2);
+B = RGB(:,:,3);
+
+I = (R+G+B)/3;
+DanhGiaAnh(I)
+V1 = (-sqrt(2)*R -sqrt(2)*G + 2*sqrt(2)*B)/6;
+V2 = (R-G)/sqrt(2);
+
+H = atan(V1./(V2+eps));
+S = sqrt(V1.^2 + V2.^2);
+
+% Bien doi dwt cua 2 anh Imri va I
+[LLmri, LHmri, HLmri, HHmri] = dwt2(MRI,'haar');
+[LL, LH, HL, HH] = dwt2(I,'haar');
+
+% Tong hop
+LLth = (LLmri + LL)/2;
+
+LHth = ma
+
+% Bien doi nguoc Haar
+
+Ith = idwt2(LLth, LH, HL, HH,'haar');
+
+%----------------------------------------------------
+R1 = Ith - V1/sqrt(2) + V2/sqrt(2);
+G1 = Ith - V1/sqrt(2) - V2/sqrt(2);
+B1 = Ith + sqrt(2)*V1;
+
+I1 = cat(3,R1,G1,B1);
+
+imshow([RGB,Irmi,I1],[])
+
